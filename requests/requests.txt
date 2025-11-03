@@ -1,0 +1,11 @@
+Create Product:
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{"name": "Caneca", "description": "Uma simples caneca.", "priceInCents": 999}' \
+http://localhost:8080/products
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{"name": "Camiseta", "description": "Uma simples camiseta.", "priceInCents": 1999}' \
+http://localhost:8080/products
