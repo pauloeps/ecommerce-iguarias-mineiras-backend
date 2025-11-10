@@ -29,7 +29,7 @@ public class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    void ProductRepository_Save_SavesProduct() {
+    void ProductService_Save_SavesProduct() {
         ProductRequestDTO request = sampleRequest();
         Category category = sampleCategory();
         when(categoryRepository.findById(3L)).thenReturn(Optional.of(category));
@@ -37,35 +37,35 @@ public class ProductServiceTest {
         Product saved = sampleProduct(10L);
         when(productRepository.save(any(Product.class))).thenReturn(saved);
 
-        Product result = productService.saveProduct(request);
+        ProductResponseDTO result = productService.saveProduct(request);
 
-        assertEquals(10L, result.getId());
+        assertEquals(10L, result.id());
         verify(productRepository).save(any(Product.class));
     }
 
     @Test
-    void ProductRepository_GetAll_GetsAllProducts() {
+    void ProductService_GetAll_GetsAllProducts() {
         Product product = sampleProduct(1L);
         when(productRepository.findAll()).thenReturn(List.of(product));
 
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponseDTO> products = productService.getAllProducts();
 
         assertEquals(1, products.size());
-        assertEquals(product, products.get(0));
+        assertEquals(product.getId(), products.get(0).id());
     }
 
     @Test
-    void ProductRepository_GetById_GetsProduct() {
+    void ProductService_GetById_GetsProduct() {
         Product product = sampleProduct(1L);
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
-        Product found = productService.getProductById(1L);
+        ProductResponseDTO found = productService.getProductById(1L);
 
         assertNotNull(found);
     }
 
     @Test
-    void ProductRepository_Update_UpdatesProduct() {
+    void ProductService_Update_UpdatesProduct() {
         Product existing = sampleProduct(1L);
         ProductRequestDTO request = sampleRequest();
         Category category = sampleCategory();
@@ -74,14 +74,14 @@ public class ProductServiceTest {
         when(categoryRepository.findById(3L)).thenReturn(Optional.of(category));
         when(productRepository.save(existing)).thenReturn(existing);
 
-        Product updateReturn = productService.updateProduct(1L, request);
+        ProductResponseDTO updateReturn = productService.updateProduct(1L, request);
 
         assertNotNull(updateReturn);
         verify(productRepository).save(existing);
     }
 
     @Test
-    void ProductRepository_Delete_DeletesProduct() {
+    void ProductService_Delete_DeletesProduct() {
         doNothing().when(productRepository).deleteById(4L);
 
         productService.deleteProduct(4L);

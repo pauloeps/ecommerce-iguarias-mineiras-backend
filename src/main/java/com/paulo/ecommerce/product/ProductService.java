@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +13,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public Product saveProduct(ProductRequestDTO request) {
+    public ProductResponseDTO saveProduct(ProductRequestDTO request) {
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
@@ -24,20 +25,27 @@ public class ProductService {
                 .category(category)
                 .build();
 
-        return productRepository.save(product);
+        Product created = productRepository.save(product);
+        return ProductResponseDTO.fromEntity(created);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products
+                .stream()
+                .map(ProductResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long id) {
-        return productRepository
+    public ProductResponseDTO getProductById(Long id) {
+        Product product = productRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        return ProductResponseDTO.fromEntity(product);
     }
 
-    public Product updateProduct(Long id, ProductRequestDTO request) {
+    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
@@ -50,7 +58,9 @@ public class ProductService {
         product.setQuantityAvailable(request.quantityAvailable());
         product.setCategory(category);
 
-        return productRepository.save(product);
+        Product updated = productRepository.save(product);
+
+        return ProductResponseDTO.fromEntity(updated);
     }
 
     public void deleteProduct(Long id) {

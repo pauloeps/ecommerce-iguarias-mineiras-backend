@@ -45,7 +45,8 @@ public class ProductControllerTest {
     void ProductController_CreateProduct_ReturnCreated() throws Exception {
         ProductRequestDTO request = sampleRequest();
         Product created = sampleProduct(5L);
-        given(productService.saveProduct(any(ProductRequestDTO.class))).willReturn(created);
+        ProductResponseDTO createdDTO = ProductResponseDTO.fromEntity(created);
+        given(productService.saveProduct(any(ProductRequestDTO.class))).willReturn(createdDTO);
 
         mockMvc
                 .perform(
@@ -63,7 +64,8 @@ public class ProductControllerTest {
     @Test
     void ProductController_GetProductById_ReturnsOk() throws Exception {
         Product product = sampleProduct(2L);
-        given(productService.getProductById(2L)).willReturn(product);
+        ProductResponseDTO productDTO = ProductResponseDTO.fromEntity(product);
+        given(productService.getProductById(2L)).willReturn(productDTO);
 
         mockMvc
                 .perform(get("/api/v1/products/2"))
@@ -78,7 +80,8 @@ public class ProductControllerTest {
     @Test
     void ProductController_GetAllProducts_ReturnsOk() throws Exception {
         Product product = sampleProduct(1L);
-        given(productService.getAllProducts()).willReturn(List.of(product));
+        ProductResponseDTO productDTO = ProductResponseDTO.fromEntity(product);
+        given(productService.getAllProducts()).willReturn(List.of(productDTO));
 
         mockMvc
                 .perform(get("/api/v1/products"))
@@ -95,7 +98,9 @@ public class ProductControllerTest {
     void ProductController_UpdateProduct_ReturnsOk() throws Exception {
         ProductRequestDTO toUpdate = sampleRequest();
         Product updated = sampleProduct(8L);
-        given(productService.updateProduct(eq(8L), any(ProductRequestDTO.class))).willReturn(updated);
+        ProductResponseDTO updatedDTO = ProductResponseDTO.fromEntity(updated);
+
+        given(productService.updateProduct(eq(8L), any(ProductRequestDTO.class))).willReturn(updatedDTO);
 
         mockMvc
                 .perform(
