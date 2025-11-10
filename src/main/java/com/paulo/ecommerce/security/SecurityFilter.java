@@ -1,7 +1,7 @@
 package com.paulo.ecommerce.security;
 
-import com.paulo.ecommerce.entities.User;
-import com.paulo.ecommerce.repositories.UserRepository;
+import com.paulo.ecommerce.user.User;
+import com.paulo.ecommerce.user.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
